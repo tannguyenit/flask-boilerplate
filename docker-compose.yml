@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  database_test:
+    container_name: database_test
+    restart: always
+    image: postgres:10
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - database:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  application:
+    container_name: application_test
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - FLASK_ENV=docker
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/app
+    depends_on:
+      - database_test
+
+volumes:
+  database:
+    driver: local

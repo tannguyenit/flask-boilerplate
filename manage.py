@@ -4,14 +4,15 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask import current_app
 from werkzeug.local import LocalProxy
+from dotenv import load_dotenv
 
 from app import create_app, db
 from app.api import api
 from infrastructor.exceptions import errors
 
 logger = LocalProxy(lambda: current_app.logger)
-
-app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
+load_dotenv()
+app = create_app(os.getenv('APP_ENV'))
 app.register_blueprint(api)
 app.register_blueprint(errors)
 
